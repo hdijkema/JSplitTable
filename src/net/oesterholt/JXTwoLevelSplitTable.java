@@ -56,18 +56,24 @@ import org.jdesktop.swingx.renderer.JRendererLabel;
 public class JXTwoLevelSplitTable extends JXSplitTable {
 	
 	class ExpandIcon implements Icon {
+		
+		static final int EXPANDED = 0;
+		static final int CLOSED = 1;
+		static final int NONE = 2;
 
 		public int 		height=10;
 		public int 		width=10;
-		public boolean  expanded=false;
+		public int      kind=NONE;
+		private boolean expanded = false;
 		public Color    color=Color.gray;
 		private Polygon _p=new Polygon();
 		
-		public ExpandIcon(boolean exp) {
+		public ExpandIcon(int exp) {
 			_p.addPoint(0,0);
 			_p.addPoint(0,0);
 			_p.addPoint(0,0);
-			expanded=exp;
+			kind = exp;
+			expanded = (kind == EXPANDED) ? true : false;
 		}
 		
 		public void setExpanded(boolean b) {
@@ -98,6 +104,16 @@ public class JXTwoLevelSplitTable extends JXSplitTable {
 			g.fillPolygon(_p);
 		}
 		
+		private void drawNone(int x,int y, int w,int h, Graphics2D g) {
+			//g.setColor(g.getBackground());
+			//g.clearRect(x, y, w, h);
+			//g.setColor(Color.white);;
+			//_p.xpoints[0]=x;_p.ypoints[0]=y;
+			//_p.xpoints[1]=x+w;_p.ypoints[1]=y;
+			//_p.xpoints[2]=x+w;_p.ypoints[2]=y+h;
+			//g.fillPolygon(_p);
+		}
+		
 		public void paintIcon(Component c, Graphics _g, int x, int y) {
 			
 			Graphics2D g=(Graphics2D) _g;
@@ -110,10 +126,14 @@ public class JXTwoLevelSplitTable extends JXSplitTable {
 			int w=width-2;
 			int h=height-2;
 			
-			if (expanded) {
-				drawDown(x,y,w,h,g);
+			if (kind != NONE) {
+				if (expanded) {
+					drawDown(x,y,w,h,g);
+				} else {
+					drawRight(x,y,w,h,g);
+				}
 			} else {
-				drawRight(x,y,w,h,g);
+				drawNone(x,y,w,h,g);
 			}
 		}
 		
@@ -304,32 +324,55 @@ public class JXTwoLevelSplitTable extends JXSplitTable {
 		
 		HighlightPredicate paintIconExpanded=new HighlightPredicate() {
 			public boolean isHighlighted(Component renderer, ComponentAdapter adapter) {
+				boolean b;
 				if (adapter.column==0) {
 					CNodeIndex cnode=_model.getCNodeIndex(adapter.row, 0);
 					if (cnode.nodeRow==-1) {
-						return _model.getNodeExpanded(cnode.nodeIndex);
+						b = _model.getNodeExpanded(cnode.nodeIndex);
 					} else {
-						return false;
+						b = false;
 					}
+					System.out.println("expanded: cnode = "+cnode+", b = "+b);
 				} else {
-					return false;
+					b = false;
 				}
+				return b;
 			}
 		};
 		HighlightPredicate paintIconClosed=new HighlightPredicate() {
 			public boolean isHighlighted(Component renderer, ComponentAdapter adapter) {
+				boolean b;
 				if (adapter.column==0) {
 					CNodeIndex cnode=_model.getCNodeIndex(adapter.row, 0);
 					if (cnode.nodeRow==-1) {
-						return !_model.getNodeExpanded(cnode.nodeIndex);
+						b = !_model.getNodeExpanded(cnode.nodeIndex);
 					} else {
+						b = false;
+					}
+					System.out.println("closed: cnode = "+cnode+", b = "+b);
+				} else {
+					b = false;
+				}
+				return b;
+			}
+		};
+		
+		HighlightPredicate paintIconNone=new HighlightPredicate() {
+			public boolean isHighlighted(Component renderer, ComponentAdapter adapter) {
+				if (adapter.column==0) {
+					CNodeIndex cnode=_model.getCNodeIndex(adapter.row, 0);
+					if (cnode.nodeRow==-1) {
 						return false;
+					} else {
+						return true;
 					}
 				} else {
-					return false;
+					return true;
 				}
 			}
 		};
+		
+		
 		HighlightPredicate splitRow=new HighlightPredicate() {
 			public boolean isHighlighted(Component renderer, ComponentAdapter adapter) {
 				CNodeIndex cnode=_model.getCNodeIndex(adapter.row, adapter.column);
@@ -352,8 +395,9 @@ public class JXTwoLevelSplitTable extends JXSplitTable {
 		};
 		
 		
-		super.addHighlighter(new IconHighlighter(paintIconExpanded,new ExpandIcon(true)),true);
-		super.addHighlighter(new IconHighlighter(paintIconClosed,new ExpandIcon(false)),true);
+		super.addHighlighter(new IconHighlighter(paintIconExpanded,new ExpandIcon(ExpandIcon.EXPANDED)),true);
+		super.addHighlighter(new IconHighlighter(paintIconClosed,new ExpandIcon(ExpandIcon.CLOSED)),true);
+		super.addHighlighter(new IconHighlighter(paintIconNone,new ExpandIcon(ExpandIcon.NONE)),true);
 		super.addHighlighter(new ColorHighlighter(splitRow,SplitTableDefaults.tablePartOfBg(),Color.black),true);
 		super.addHighlighter(new ColorHighlighter(splitRow,SplitTableDefaults.tablePartOfBg(),Color.black),false);
 		super.addHighlighter(new BorderHighlighter(top,SplitTableDefaults.topCellBorder()), true);
