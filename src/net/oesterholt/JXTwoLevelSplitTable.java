@@ -332,7 +332,7 @@ public class JXTwoLevelSplitTable extends JXSplitTable {
 					} else {
 						b = false;
 					}
-					System.out.println("expanded: cnode = "+cnode+", b = "+b);
+					//System.out.println("expanded: cnode = "+cnode+", b = "+b);
 				} else {
 					b = false;
 				}
@@ -349,7 +349,7 @@ public class JXTwoLevelSplitTable extends JXSplitTable {
 					} else {
 						b = false;
 					}
-					System.out.println("closed: cnode = "+cnode+", b = "+b);
+					//System.out.println("closed: cnode = "+cnode+", b = "+b);
 				} else {
 					b = false;
 				}
