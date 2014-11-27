@@ -1,6 +1,6 @@
 /* ******************************************************************************
  *
- *       Copyright 2008-2010 Hans Oesterholt-Dijkema
+ *       Copyright 2008-2010 Hans Dijkema
  *       This file is part of the JDesktop SwingX library
  *       and part of the SwingLabs project
  *
@@ -19,7 +19,7 @@
  *   
  * ******************************************************************************/
 
-package net.oesterholt.splittable;
+package net.dijkema.splittable;
 
 public class TwoLevelSplitTableException extends Exception {
 

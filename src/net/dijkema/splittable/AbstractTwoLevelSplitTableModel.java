@@ -1,6 +1,6 @@
 /* ******************************************************************************
  *
- *       Copyright 2008-2010 Hans Oesterholt-Dijkema
+ *       Copyright 2008-2010 Hans Dijkema
  *       This file is part of the JDesktop SwingX library
  *       and part of the SwingLabs project
  *
@@ -19,12 +19,12 @@
  *   
  * ******************************************************************************/
 
-package net.oesterholt.splittable;
+package net.dijkema.splittable;
 
 /**
  * This model must implement a two level model consisting of nodes with rows per node.
  * 
- * @author Hans Oesterholt
+ * @author Hans Dijkema
  *
  */
 public abstract class AbstractTwoLevelSplitTableModel extends AbstractSplitTableModel {

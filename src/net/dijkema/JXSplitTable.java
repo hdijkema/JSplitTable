@@ -1,6 +1,6 @@
 /* ******************************************************************************
  *
- *       Copyright 2008-2010 Hans Oesterholt-Dijkema
+ *       Copyright 2008-2010 Hans Dijkema
  *       This file is part of the JDesktop SwingX library
  *       and part of the SwingLabs project
  *
@@ -19,7 +19,7 @@
  *   
  * ******************************************************************************/
 
-package net.oesterholt;
+package net.dijkema;
 
 import java.awt.Dimension;
 import java.awt.Point;
@@ -36,8 +36,8 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 
 import net.miginfocom.swing.MigLayout;
-import net.oesterholt.splittable.AbstractSplitTableModel;
-import net.oesterholt.splittable.Jzc3Table;
+import net.dijkema.splittable.AbstractSplitTableModel;
+import net.dijkema.splittable.Jzc3Table;
 
 import org.jdesktop.swingx.decorator.Highlighter;
 import org.jdesktop.swingx.table.TableColumnExt;
@@ -60,7 +60,7 @@ public class JXSplitTable extends JPanel {
 	/**
 	 * NB. A select() or choosen() in the right part (left==false), will result in a unSelected() in
 	 * the left part (left==true);
-	 * @author Hans Oesterholt
+	 * @author Hans Dijkema
 	 *
 	 */
 	public interface SelectionListener {

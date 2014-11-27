@@ -1,6 +1,6 @@
 /* ******************************************************************************
  *
- *       Copyright 2008-2010 Hans Oesterholt-Dijkema
+ *       Copyright 2008-2010 Hans Dijkema
  *       This file is part of the JDesktop SwingX library
  *       and part of the SwingLabs project
  *
@@ -19,7 +19,7 @@
  *   
  * ******************************************************************************/
 
-package net.oesterholt;
+package net.dijkema;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -41,9 +41,9 @@ import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
-import net.oesterholt.splittable.AbstractTwoLevelSplitTableModel;
-import net.oesterholt.splittable.SplitTableDefaults;
-import net.oesterholt.splittable.AbstractTwoLevelSplitTableModel.CNodeIndex;
+import net.dijkema.splittable.AbstractTwoLevelSplitTableModel;
+import net.dijkema.splittable.SplitTableDefaults;
+import net.dijkema.splittable.AbstractTwoLevelSplitTableModel.CNodeIndex;
 
 import org.jdesktop.swingx.decorator.BorderHighlighter;
 import org.jdesktop.swingx.decorator.ColorHighlighter;

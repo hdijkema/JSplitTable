@@ -1,6 +1,6 @@
 /* ******************************************************************************
  *
- *       Copyright 2008-2010 Hans Oesterholt-Dijkema
+ *       Copyright 2008-2010 Hans Dijkema
  *       This file is part of the JDesktop SwingX library
  *       and part of the SwingLabs project
  *
@@ -19,7 +19,7 @@
  *   
  * ******************************************************************************/
 
-package net.oesterholt.demo;
+package net.dijkema.demo;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -41,11 +41,11 @@ import javax.swing.table.AbstractTableModel;
 //import org.pushingpixels.substance.api.skin.SubstanceMistAquaLookAndFeel;
 
 import net.miginfocom.swing.MigLayout;
-import net.oesterholt.JXSplitTable;
-import net.oesterholt.JXTwoLevelSplitTable;
-import net.oesterholt.splittable.AbstractSplitTableModel;
-import net.oesterholt.splittable.AbstractTwoLevelSplitTableModel;
-import net.oesterholt.splittable.Jzc3Table;
+import net.dijkema.JXSplitTable;
+import net.dijkema.JXTwoLevelSplitTable;
+import net.dijkema.splittable.AbstractSplitTableModel;
+import net.dijkema.splittable.AbstractTwoLevelSplitTableModel;
+import net.dijkema.splittable.Jzc3Table;
 
 class SplitTableModel extends AbstractTableModel {
 	
