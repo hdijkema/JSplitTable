@@ -19,9 +19,8 @@
  *   
  * ******************************************************************************/
 
-package net.dijkema.splittable;
+package net.dijkema;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -45,7 +44,6 @@ import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SortOrder;
-import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -53,13 +51,13 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.text.JTextComponent;
 
+import net.dijkema.splittable.SplitTableDefaults;
+
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.BorderHighlighter;
-import org.jdesktop.swingx.decorator.ComponentAdapter;
-import org.jdesktop.swingx.decorator.HighlightPredicate;
 
 class zc3MouseAdapt extends MouseAdapter {
-	Jzc3Table _table;
+	JX2Table _table;
 	
 	public void mouseClicked(MouseEvent e){
 	      if (e.getClickCount() >= 2) {
@@ -67,13 +65,13 @@ class zc3MouseAdapt extends MouseAdapter {
 	      }	
 	}
 	
-	public zc3MouseAdapt(Jzc3Table t) {
+	public zc3MouseAdapt(JX2Table t) {
 		_table=t;
 	}
 }
 
 class zc3MouseAdaptForHeader extends MouseAdapter {
-	Jzc3Table _table;
+	JX2Table _table;
 	
 	static public int ENTER=1;
 	static public int LEAVE=2;
@@ -111,13 +109,13 @@ class zc3MouseAdaptForHeader extends MouseAdapter {
 		_table.fireMouseEventForHeader(e,RELEASED);
 	}
 	
-	public zc3MouseAdaptForHeader(Jzc3Table t) {
+	public zc3MouseAdaptForHeader(JX2Table t) {
 		_table=t;
 	}
 }
 
 
-public class Jzc3Table extends JXTable {
+public class JX2Table extends JXTable {
 
 	private String  _name;
 	private boolean _selectTextOnFocus=false;
@@ -311,30 +309,30 @@ public class Jzc3Table extends JXTable {
 	}
 	
 	
-	public Jzc3Table() {
+	public JX2Table() {
 		_name=null;
 		init();
 	}
 	
-	public Jzc3Table(AbstractTableModel m) {
+	public JX2Table(AbstractTableModel m) {
 		super(m);
 		_name=null;
 		init();
 	}
 	
-	public Jzc3Table(String name) {
+	public JX2Table(String name) {
 		_name=name;
 		init();
 	}
 	
-	public Jzc3Table(String name,AbstractTableModel m) {
+	public JX2Table(String name,AbstractTableModel m) {
 		super(m);
 		_name=name;
 		init();
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Jzc3Table(String name,Vector data,Vector headers) {
+	public JX2Table(String name,Vector data,Vector headers) {
 		super(data,headers);
 		_name=name;
 		init();
@@ -387,8 +385,8 @@ public class Jzc3Table extends JXTable {
 	    addKey(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0),
 	    	   new AbstractAction() {
 					public void actionPerformed(ActionEvent e) {
-						if (Jzc3Table.this.getSelectedRow()!=-1) {
-							Jzc3Table.this.deleteEvent();
+						if (JX2Table.this.getSelectedRow()!=-1) {
+							JX2Table.this.deleteEvent();
 						}
 					}
 	    });
@@ -396,8 +394,8 @@ public class Jzc3Table extends JXTable {
 	    addKey(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0),
 		    	   new AbstractAction() {
 						public void actionPerformed(ActionEvent e) {
-							if (Jzc3Table.this.getSelectedRow()!=-1) {
-								Jzc3Table.this.insertEvent();
+							if (JX2Table.this.getSelectedRow()!=-1) {
+								JX2Table.this.insertEvent();
 							}
 						}
 		    });
@@ -405,8 +403,8 @@ public class Jzc3Table extends JXTable {
 	    addKey(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.VK_CONTROL),
 		    	   new AbstractAction() {
 						public void actionPerformed(ActionEvent e) {
-							if (Jzc3Table.this.getSelectedRow()!=-1) {
-								Jzc3Table.this.enterEvent();
+							if (JX2Table.this.getSelectedRow()!=-1) {
+								JX2Table.this.enterEvent();
 							}
 						}
 		    });

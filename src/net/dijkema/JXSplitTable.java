@@ -37,13 +37,12 @@ import javax.swing.table.TableCellRenderer;
 
 import net.miginfocom.swing.MigLayout;
 import net.dijkema.splittable.AbstractSplitTableModel;
-import net.dijkema.splittable.Jzc3Table;
 
 import org.jdesktop.swingx.decorator.Highlighter;
 import org.jdesktop.swingx.table.TableColumnExt;
 
 
-class MyJzc3Table extends Jzc3Table {
+class MyJzc3Table extends JX2Table {
 	
 	public String getTTT(MouseEvent e) {
 		return super.getToolTipText(e);
@@ -57,6 +56,12 @@ class MyJzc3Table extends Jzc3Table {
 
 public class JXSplitTable extends JPanel {
 	
+	/**
+	 * JXSplitTable Version
+	 */
+	private static final long serialVersionUID = 1L;
+
+
 	/**
 	 * NB. A select() or choosen() in the right part (left==false), will result in a unSelected() in
 	 * the left part (left==true);
@@ -130,11 +135,11 @@ public class JXSplitTable extends JPanel {
 		while (it.hasNext()) { it.next().unSelected(left); }
 	}
 	
-	public Jzc3Table leftTable() {
+	public JX2Table leftTable() {
 		return _tleft;
 	}
 	
-	public Jzc3Table rightTable() {
+	public JX2Table rightTable() {
 		return _tright;
 	}
 	
@@ -197,7 +202,7 @@ public class JXSplitTable extends JPanel {
 		return _tright.getTableHeader();
 	}
 	
-	public void addHeaderListener(Jzc3Table.HeaderListener h,boolean left) {
+	public void addHeaderListener(JX2Table.HeaderListener h,boolean left) {
 		if (left) {
 			_tleft.addHeaderListener(h);
 		} else {
@@ -205,7 +210,7 @@ public class JXSplitTable extends JPanel {
 		}
 	}
 	
-	public void removeHeaderListener(Jzc3Table.HeaderListener h,boolean left) {
+	public void removeHeaderListener(JX2Table.HeaderListener h,boolean left) {
 		if (left) {
 			_tleft.removeHeaderListener(h);
 		} else {
@@ -287,7 +292,7 @@ public class JXSplitTable extends JPanel {
 		_tleft.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		_tright.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
-		_tright.addSelectionListener(new Jzc3Table.SelectionListener() {
+		_tright.addSelectionListener(new JX2Table.SelectionListener() {
 			public void choosen(int row) {
 				_tleft.clearSelection();
 				informChoosen(row,_tright.getSelectedColumn(),false);
@@ -301,7 +306,7 @@ public class JXSplitTable extends JPanel {
 			}
 		});
 		
-		_tleft.addSelectionListener(new Jzc3Table.SelectionListener() {
+		_tleft.addSelectionListener(new JX2Table.SelectionListener() {
 			public void choosen(int row) {
 				_tright.clearSelection();
 				informChoosen(row,_tleft.getSelectedColumn(),true);

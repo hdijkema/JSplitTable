@@ -40,12 +40,13 @@ import javax.swing.table.AbstractTableModel;
 
 //import org.pushingpixels.substance.api.skin.SubstanceMistAquaLookAndFeel;
 
+
 import net.miginfocom.swing.MigLayout;
 import net.dijkema.JXSplitTable;
 import net.dijkema.JXTwoLevelSplitTable;
+import net.dijkema.JX2Table;
 import net.dijkema.splittable.AbstractSplitTableModel;
 import net.dijkema.splittable.AbstractTwoLevelSplitTableModel;
-import net.dijkema.splittable.Jzc3Table;
 
 class SplitTableModel extends AbstractTableModel {
 	
@@ -90,7 +91,7 @@ class SplitTableModel extends AbstractTableModel {
 
 class JSplitTableInternal extends JScrollPane {
 
-	public JSplitTableInternal(Jzc3Table right,JComponent left) {
+	public JSplitTableInternal(JX2Table right,JComponent left) {
 		super(right,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		super.setRowHeaderView(left);
 	}
@@ -101,14 +102,14 @@ class JSplitTable extends JPanel {
 	SplitTableModel _left;
 	SplitTableModel _right;
 	
-	Jzc3Table _tleft;
-	Jzc3Table _tright;
+	JX2Table _tleft;
+	JX2Table _tright;
 	
 	public JSplitTable(AbstractTableModel m,int splitAtColumn) {
 		_left=new SplitTableModel(m,splitAtColumn,true);
 		_right=new SplitTableModel(m,splitAtColumn,false);
-		_tleft=new Jzc3Table(_left);
-		_tright=new Jzc3Table(_right);
+		_tleft=new JX2Table(_left);
+		_tright=new JX2Table(_right);
 		_tright.setHorizontalScrollEnabled(true);
 		JPanel p=new JPanel();
 		p.setLayout(new MigLayout("insets 0,fill"));
