@@ -56,7 +56,7 @@ import net.dijkema.splittable.SplitTableDefaults;
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.BorderHighlighter;
 
-class zc3MouseAdapt extends MouseAdapter {
+class MouseAdapt extends MouseAdapter {
 	JX2Table _table;
 	
 	public void mouseClicked(MouseEvent e){
@@ -65,7 +65,7 @@ class zc3MouseAdapt extends MouseAdapter {
 	      }	
 	}
 	
-	public zc3MouseAdapt(JX2Table t) {
+	public MouseAdapt(JX2Table t) {
 		_table=t;
 	}
 }
@@ -145,10 +145,7 @@ public class JX2Table extends JXTable {
 		public void insert(int row);
 	}
 	
-	//private Color   		_normal=Jzc3Defaults.tableNormalBg();
-	//private Color   		_partof=Jzc3Defaults.tablePartOfBg();
 	private boolean			_prefsRead=false;
-	//private IVTable.Colours _current[]={IVTable.Colours.NORMAL};
 	
 	ArrayList<ActionListener> listeners=new ArrayList<ActionListener>();
 
@@ -176,7 +173,7 @@ public class JX2Table extends JXTable {
 	
 	private void storeColumnAttributes() {
 		if (_name!=null) {
-			Preferences prefs=Preferences.userRoot().node("jzc3table");
+			Preferences prefs=Preferences.userRoot().node("jx2table");
 			//StringObjectEncoder enc=new StringObjectEncoder();
 			int i,N=super.getColumnCount();
 			prefs.putInt(String.format("%s_N",_name),N);
@@ -200,13 +197,11 @@ public class JX2Table extends JXTable {
 	
 	private void readColumnAttributes() {
 		if (_name!=null) {
-			Preferences prefs=Preferences.userRoot().node("jzc3table");
+			Preferences prefs=Preferences.userRoot().node("jx2table");
 			int N=prefs.getInt(String.format("%s_N",_name), -1);
 			if (N!=-1) {
 				try {
-					//StringObjectDecoder dec = new StringObjectDecoder(data);
 					int i; //, N;
-					//N = dec.inInt();
 					int icol = -1;
 					SortOrder scol = null;
 					if (N == super.getColumnCount()) {
@@ -240,10 +235,8 @@ public class JX2Table extends JXTable {
 					if (icol >= 0) {
 						super.setSortOrder(icol, scol);
 					}
-					//dec.close();
 				} catch (Exception E) {
 					E.printStackTrace();
-					//logger.error(E);
 				}
 			}
 			
@@ -345,11 +338,13 @@ public class JX2Table extends JXTable {
 	}
 	
 	public void init() {
-		this.addMouseListener(new zc3MouseAdapt(this));
+		this.addMouseListener(new MouseAdapt(this));
 		
 		//super.setShowGrid(true);  --> Not reliable with Nimbus
 		super.setShowGrid(false); // override default mode of any LAF 
 		this.addHighlighter(new BorderHighlighter(null,SplitTableDefaults.innerCellBorder(),false));
+		
+		super.setSortOrderCycle(SortOrder.ASCENDING,SortOrder.DESCENDING,SortOrder.UNSORTED);
 		
 		JTableHeader h=super.getTableHeader();
 		h.addMouseListener(new zc3MouseAdaptForHeader(this));
