@@ -304,6 +304,14 @@ public class JXTwoLevelSplitTable extends JXSplitTable {
 		}
 	}*/
 	
+	/**
+	 * Constructs the JXTowLevelSplitTable with given name, model and scrollbar policies. 
+	 * 
+	 * @param name
+	 * @param model
+	 * @param verticalScrollPolicy
+	 * @param horizontalScrollPolicy
+	 */
 	public JXTwoLevelSplitTable(String name, AbstractTwoLevelSplitTableModel model,
 			int verticalScrollPolicy, int horizontalScrollPolicy) {
 		super(name, model, verticalScrollPolicy, horizontalScrollPolicy);
