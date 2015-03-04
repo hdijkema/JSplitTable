@@ -321,8 +321,13 @@ public class JXSplitTable extends JPanel {
 		});
 		
 		super.setLayout(new MigLayout("insets 0,fill"));	// TODO: Change this to something not relying on MigLayout
-		_spane=new JScrollPane(_tright,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED); 
-		_spane.setRowHeaderView(_tleft);
+		
+		if (model.getColumnCount() == 1) { // there are no columns at the right to show
+			_spane = new JScrollPane(_tleft, verticalScrollPolicy, horizontalScrollPolicy);
+		} else {
+			_spane=new JScrollPane(_tright,verticalScrollPolicy,horizontalScrollPolicy); 
+			_spane.setRowHeaderView(_tleft);
+		}
 		
 		super.add(_spane,"growx,growy");
 		

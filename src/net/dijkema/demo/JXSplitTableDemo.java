@@ -41,12 +41,14 @@ import javax.swing.table.AbstractTableModel;
 //import org.pushingpixels.substance.api.skin.SubstanceMistAquaLookAndFeel;
 
 
+
 import net.miginfocom.swing.MigLayout;
 import net.dijkema.JXSplitTable;
 import net.dijkema.JXTwoLevelSplitTable;
 import net.dijkema.JX2Table;
 import net.dijkema.splittable.AbstractSplitTableModel;
 import net.dijkema.splittable.AbstractTwoLevelSplitTableModel;
+import net.dijkema.splittable.TwoLevelSelectionListenerAdapter;
 
 class SplitTableModel extends AbstractTableModel {
 	
@@ -269,45 +271,39 @@ public class JXSplitTableDemo {
 							//t.getColumnExt(col, true).setWidth(width);
 						}
 					});
-					//m.fireTableStructureChanged();
-					//t.getColumnExt(0, false).setPrototypeValue("Abcdefghijklmnopqrstuvwxyz Abcdefghijklmnopqrstuvwxyz");
-					//Object q=t.getColumnExt(0, false).getPrototypeValue();
 					t.getColumnExt(0, true).setPreferredWidth(300);
-					//t.doLayout();
-					//t.packColumn(0,10, false);
-					//JXTable tt;
-					//tt.packColumn(column, margin)
-					//t.setNodeIconColor(Color.RED);
+
+					/*
 					t.addSelectionListener(new JXSplitTable.SelectionListener() {
 						public void choosen(int row, int col, boolean left) {
-							//logger.info(String.format("Choosen : row=%d, col=%d, left=%d",row,col,(left)?1:0));
 							System.out.println(String.format("Choosen : row=%d, col=%d, left=%d",row,col,(left)?1:0));
 							m.fireTableStructureChanged();
-							//t.doLayout();
-							//t.getColumnExt(0, true).setPreferredWidth(400);
 						}
 
 						public void selected(int row, int col, boolean left) {
-							//logger.info(String.format("Selected : row=%d, col=%d, left=%d",row,col,(left)?1:0));
 							System.out.println(String.format("Selected : row=%d, col=%d, left=%d",row,col,(left)?1:0));
 						}
 
 						public void unSelected(boolean left) {
-							//logger.info(String.format("UnSelected : left=%d",(left)?1:0));
 							System.out.println(String.format("UnSelected : left=%d",(left)?1:0));
 						}
 						
+					});*/
+					t.addSelectionListener(new TwoLevelSelectionListenerAdapter() {
+						public void unSelected(boolean left) {
+							System.out.println("unselected");
+						}
+						
+						/*public void selected(int nodeIndex, int nodeRow, int col, boolean left) {
+							System.out.println("selected "+nodeIndex+", "+nodeRow+", "+col+", "+left);
+						}*/
+						
+						public void choosen(int nodeIndex, int nodeRow, int col, boolean left) {
+							System.out.println("choosen "+nodeIndex+", "+nodeRow+", "+col+", "+left);
+						}
 					});
 					
 					{
-						/*Jzc3ButtonArea a=new Jzc3ButtonArea();
-						a.addButton("Ok", "ok", new ActionListener() {
-							public void actionPerformed(ActionEvent arg0) {
-								_frame.setVisible(false);
-								_frame.dispose();
-							}
-						});
-						p.add(a,"growx");*/
 						JButton a=new JButton("Ok");
 						a.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent arg0) {
