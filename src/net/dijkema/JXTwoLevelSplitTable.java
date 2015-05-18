@@ -184,58 +184,6 @@ public class JXTwoLevelSplitTable extends JXSplitTable {
 	private Set<SelectionListener>          _listeners;
 	
 
-	/*private TableCellRenderer 				_leftNodeRenderer;
-	private TableCellRenderer				_rightNodeRenderer;
-	private TableCellRenderer               _leftRenderer;
-	private TableCellRenderer               _rightRenderer;*/
-	
-	/*public TableCellRenderer getLeftNodeRenderer() {
-		return _leftNodeRenderer;
-	}
-	
-	public TableCellRenderer getRightNodeRenderer() {
-		return _rightNodeRenderer;
-	}
-	
-	public void setLeftNodeRenderer(TableCellRenderer renderer) {
-		_leftNodeRenderer=renderer;
-	}
-
-	public void setRightNodeRenderer(TableCellRenderer renderer) {
-		_rightNodeRenderer=renderer;
-	}*/
-	
-	/*
-	public void setNodeIconColor(Color c) throws TwoLevelSplitTableException {
-		if (_leftNodeRenderer instanceof TwoLevelSplitTableNodeCellRenderer) {
-			((TwoLevelSplitTableNodeCellRenderer) _leftNodeRenderer).setIconColor(c);
-		} else {
-			throw new TwoLevelSplitTableException("Need an instance of TwoLevelSplitTableNodeCellRenderer to set the Icon color");
-		}
-	}
-	
-	public void setNodeBackgroundColor(Color c) throws TwoLevelSplitTableException {
-		if (_leftNodeRenderer instanceof TwoLevelSplitTableNodeCellRenderer) {
-			((TwoLevelSplitTableNodeCellRenderer) _leftNodeRenderer).setNodeExpandedBackground(c);
-			((TwoLevelSplitTableNodeCellRenderer) _leftNodeRenderer).setNodeExpandedBackground(c);
-			((TwoLevelSplitTableNodeCellRenderer) _leftNodeRenderer).setNodeUnExpandedBackground(c);
-			((TwoLevelSplitTableNodeCellRenderer) _leftNodeRenderer).setNodeUnExpandedBackground(c);
-		} else {
-			throw new TwoLevelSplitTableException("Need an instance of TwoLevelSplitTableNodeCellRenderer to set the background color");
-		}
-	}
-	
-	public void setLeftRenderer(TableCellRenderer renderer) {
-		_leftRenderer=new TableCellRendererWrapper(true,_model,renderer);
-		super.setDefaultLeftRenderer(Object.class, _leftRenderer);
-	}
-	
-	public void setRightRenderer(TableCellRenderer renderer) {
-		_rightRenderer=new TableCellRendererWrapper(false,_model,renderer);
-		super.setDefaultRightRenderer(Object.class, _rightRenderer);
-	}
-	*/
-	
 	public void addSelectionListener(SelectionListener l) {
 		_listeners.add(l);
 	}
@@ -244,65 +192,6 @@ public class JXTwoLevelSplitTable extends JXSplitTable {
 		_listeners.remove(l);
 	}
 
-	/*
-	class TableCellRendererWrapper implements TableCellRenderer {
-		
-		private TableCellRenderer 				_previous;
-		private AbstractTwoLevelSplitTableModel _model;
-		private boolean                         _left;
-		private CompoundBorder                  _border;
-		private CompoundBorder					_topBorder;
-		private CompoundBorder					_topLeftBorder;
-		private CompoundBorder					_leftBorder;
-		
-		public TableCellRendererWrapper(boolean left,AbstractTwoLevelSplitTableModel model,TableCellRenderer prev) {
-			_previous=(TableCellRenderer) prev;
-			_model=model;
-			_left=left;
-			_border=new CompoundBorder(new MatteBorder(0,0,1,1,Color.gray),new EmptyBorder(1,1,1,1));
-			_topBorder=new CompoundBorder(new MatteBorder(1,0,1,1,Color.gray),new EmptyBorder(1,1,1,1));
-			_topLeftBorder=new CompoundBorder(new MatteBorder(1,1,1,1,Color.gray),new EmptyBorder(1,1,1,1));
-			_leftBorder=new CompoundBorder(new MatteBorder(0,1,1,1,Color.gray),new EmptyBorder(1,1,1,1));
-		}
-
-		public Component getTableCellRendererComponent(JTable table,
-				Object value, boolean isSelected, boolean hasFocus, int row,
-				int column) {
-			AbstractTwoLevelSplitTableModel.CNodeIndex cnode=_model.getCNodeIndex(row, column);
-			if (cnode.nodeRow==-1) {
-				if (_left) {
-					return _leftNodeRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-				} else {
-					return _rightNodeRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-				}
-			} else {
-				Component c;
-				c=_previous.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-				return c;
-				if (c instanceof JRendererLabel || c instanceof DefaultTableCellRenderer || c instanceof JPanel) { 
-					if (cnode.nodeRow==0 && cnode.column==0) {
-						if (_left) {
-							((JRendererLabel) c).setBorder( _topLeftBorder );
-						} else {
-							((JRendererLabel) c).setBorder( _topBorder );
-						}
-					} else if (cnode.nodeRow==0) {
-						((JRendererLabel) c).setBorder( _topBorder );
-					} else if (cnode.column==0) {
-						if (_left) {
-							((JRendererLabel) c).setBorder( _leftBorder );
-						} else {
-							((JRendererLabel) c).setBorder( _border );
-						}
-					} else {
-						((JRendererLabel) c).setBorder( _border );
-					}
-				}
-				return c;
-				
-			}
-		}
-	}*/
 	
 	/**
 	 * Constructs the JXTowLevelSplitTable with given name, model and scrollbar policies. 
@@ -321,13 +210,6 @@ public class JXTwoLevelSplitTable extends JXSplitTable {
 		
 		_model=model;
 		_listeners=new HashSet<SelectionListener>();
-		
-		/*_leftNodeRenderer=new TwoLevelSplitTableNodeCellRenderer(true,_model,super.getDefaultLeftRenderer(Object.class));
-		_rightNodeRenderer=new TwoLevelSplitTableNodeCellRenderer(false,_model,super.getDefaultRightRenderer(Object.class));
-		_leftRenderer=new TableCellRendererWrapper(true,_model,super.getDefaultLeftRenderer(Object.class));
-		_rightRenderer=new TableCellRendererWrapper(false,_model,super.getDefaultRightRenderer(Object.class));
-		super.setDefaultLeftRenderer(Object.class, _leftRenderer);
-		super.setDefaultRightRenderer(Object.class, _rightRenderer);*/
 		
 		HighlightPredicate paintIconExpanded=new HighlightPredicate() {
 			public boolean isHighlighted(Component renderer, ComponentAdapter adapter) {

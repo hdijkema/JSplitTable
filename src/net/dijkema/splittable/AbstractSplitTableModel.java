@@ -40,7 +40,11 @@ abstract public class AbstractSplitTableModel extends AbstractTableModel {
 	//static Logger logger=zc3Logger.getLogger(AbstractSplitTableModel.class);
 
 	private static final long serialVersionUID = 1L;
-
+	
+	public interface ColumnsListener {
+		public void numOfColumnsChanged(AbstractSplitTableModel m);
+	}
+	
 	class SplitModel extends AbstractTableModel {
 		
 		private static final long serialVersionUID = 1L;
@@ -135,6 +139,23 @@ abstract public class AbstractSplitTableModel extends AbstractTableModel {
 		_listeners.remove(l);
 	}
 	
+	private Set<ColumnsListener> _clisteners = new HashSet<ColumnsListener>();
+	
+	public void addColumnsListener(ColumnsListener l) {
+		_clisteners.add(l);
+	}
+	
+	public void removeColumnsListener(ColumnsListener l) {
+		_clisteners.remove(l);
+	}
+	
+	protected void informColumnsChange() {
+		Iterator<ColumnsListener> it = _clisteners.iterator();
+		while(it.hasNext()) {
+			it.next().numOfColumnsChanged(this);
+		}
+	}
+	
 	private SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private Date             ctime=new Date();
 	
@@ -215,6 +236,7 @@ abstract public class AbstractSplitTableModel extends AbstractTableModel {
 		if (_left!=null) {
 			_left.fireTableDataChanged();
 			_right.fireTableDataChanged();
+			this.informColumnsChange();
 		}
 	}
 	
@@ -222,6 +244,7 @@ abstract public class AbstractSplitTableModel extends AbstractTableModel {
 		if (_left!=null) {
 			_left.fireTableChanged(e);
 			_right.fireTableChanged(e);
+			this.informColumnsChange();
 		}
 	}
 	
@@ -258,6 +281,7 @@ abstract public class AbstractSplitTableModel extends AbstractTableModel {
 			_left.fireTableStructureChanged();
 			_right.fireTableStructureChanged();
 			informListeners();
+			this.informColumnsChange();
 		}
 	}
 	

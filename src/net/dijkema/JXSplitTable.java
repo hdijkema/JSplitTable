@@ -37,6 +37,7 @@ import javax.swing.table.TableCellRenderer;
 
 import net.miginfocom.swing.MigLayout;
 import net.dijkema.splittable.AbstractSplitTableModel;
+import net.dijkema.splittable.AbstractSplitTableModel.ColumnWidthListener;
 
 import org.jdesktop.swingx.decorator.Highlighter;
 import org.jdesktop.swingx.table.TableColumnExt;
@@ -107,6 +108,7 @@ public class JXSplitTable extends JPanel {
 	private MyJzc3Table 	_tright;
 	
 	private JScrollPane _spane;
+	private int         _columns;
 	
 	private Set<SelectionListener> _listeners;
 	
@@ -269,18 +271,20 @@ public class JXSplitTable extends JPanel {
 			_tright.removeHighlighter(h);
 	} 
 	
-	
-	@SuppressWarnings("serial")
 	public JXSplitTable(String prgName, String name,AbstractSplitTableModel model,int verticalScrollPolicy,int horizontalScrollPolicy) {//,int minimumWidth) {
 		_listeners=new HashSet<SelectionListener>();
 		
 		_tleft=new MyJzc3Table(prgName, name+".left",model.modelLeft()) {
+			private static final long serialVersionUID = 1L;
+
 			public String getToolTipText(MouseEvent e) {
 				return JXSplitTable.this.getToolTipText(true,e);
 			}
 		};
 		
 		_tright=new MyJzc3Table(prgName, name+".right",model.modelRight()) {
+			private static final long serialVersionUID = 1L;
+
 			public String getToolTipText(MouseEvent e) {
 				return JXSplitTable.this.getToolTipText(false,e);
 			}
@@ -324,12 +328,28 @@ public class JXSplitTable extends JPanel {
 		
 		super.setLayout(new MigLayout("insets 0,fill"));	// TODO: Change this to something not relying on MigLayout
 		
-		if (model.getColumnCount() == 1) { // there are no columns at the right to show
+		_columns = model.getColumnCount();
+		if (_columns == 1) { // there are no columns at the right to show
 			_spane = new JScrollPane(_tleft, verticalScrollPolicy, horizontalScrollPolicy);
 		} else {
 			_spane=new JScrollPane(_tright,verticalScrollPolicy,horizontalScrollPolicy); 
 			_spane.setRowHeaderView(_tleft);
 		}
+		
+		model.addColumnsListener(new AbstractSplitTableModel.ColumnsListener() {
+			public void numOfColumnsChanged(AbstractSplitTableModel m) {
+				if (m.getColumnCount() != _columns) {
+					_columns = m.getColumnCount();
+					if (_columns == 1) { 
+						_spane.setRowHeaderView(null);;
+						_spane.setViewportView(_tleft);
+					} else {
+						_spane.setRowHeaderView(_tleft);
+						_spane.setViewportView(_tright);
+					}
+				}
+			}
+		});
 		
 		super.add(_spane,"growx,growy");
 		
