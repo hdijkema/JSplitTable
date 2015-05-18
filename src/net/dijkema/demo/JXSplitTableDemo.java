@@ -110,8 +110,8 @@ class JSplitTable extends JPanel {
 	public JSplitTable(AbstractTableModel m,int splitAtColumn) {
 		_left=new SplitTableModel(m,splitAtColumn,true);
 		_right=new SplitTableModel(m,splitAtColumn,false);
-		_tleft=new JX2Table(_left);
-		_tright=new JX2Table(_right);
+		_tleft=new JX2Table(this.getClass().getName(), _left);
+		_tright=new JX2Table(this.getClass().getName(), _right);
 		_tright.setHorizontalScrollEnabled(true);
 		JPanel p=new JPanel();
 		p.setLayout(new MigLayout("insets 0,fill"));
@@ -262,7 +262,7 @@ public class JXSplitTableDemo {
 					
 					final MyModel m=new MyModel(10,10,100);
 					
-					final JXTwoLevelSplitTable t=new JXTwoLevelSplitTable("test",m,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+					final JXTwoLevelSplitTable t=new JXTwoLevelSplitTable(this.getClass().getName(),"test",m,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 					p.add(t,"growx,growy,wrap");
 					m.addColumnWidthListener(new AbstractSplitTableModel.ColumnWidthListener() {
 						public void prefferedWidthForColumn(int col, int width) {

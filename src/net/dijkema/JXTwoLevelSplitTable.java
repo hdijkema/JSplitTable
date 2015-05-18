@@ -312,9 +312,8 @@ public class JXTwoLevelSplitTable extends JXSplitTable {
 	 * @param verticalScrollPolicy
 	 * @param horizontalScrollPolicy
 	 */
-	public JXTwoLevelSplitTable(String name, AbstractTwoLevelSplitTableModel model,
-			int verticalScrollPolicy, int horizontalScrollPolicy) {
-		super(name, model, verticalScrollPolicy, horizontalScrollPolicy);
+	public JXTwoLevelSplitTable(String prgName, String name, AbstractTwoLevelSplitTableModel model, int verticalScrollPolicy, int horizontalScrollPolicy) {
+		super(prgName, name, model, verticalScrollPolicy, horizontalScrollPolicy);
 		
 		super.setShowGrid(false);
 		super.setIntercellSpacing(new Dimension(0,1));

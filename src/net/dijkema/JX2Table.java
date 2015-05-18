@@ -44,8 +44,11 @@ import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SortOrder;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableColumnModelEvent;
+import javax.swing.event.TableColumnModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
@@ -117,7 +120,10 @@ class zc3MouseAdaptForHeader extends MouseAdapter {
 
 public class JX2Table extends JXTable {
 
+	private static final long serialVersionUID = 1L;
+	
 	private String  _name;
+	private String  _prgName;
 	private boolean _selectTextOnFocus=false;
 	
 	public interface SelectionListener {
@@ -148,6 +154,7 @@ public class JX2Table extends JXTable {
 	private boolean			_prefsRead=false;
 	
 	ArrayList<ActionListener> listeners=new ArrayList<ActionListener>();
+	private boolean _persistentRequested;
 
 	// scrolling 
 	
@@ -171,31 +178,25 @@ public class JX2Table extends JXTable {
 		super.scrollRectToVisible(R);
 	}
 	
-	private void storeColumnAttributes() {
+	private void storeColumnAttributes(String prgName) {
 		if (_name!=null) {
 			Preferences prefs=Preferences.userRoot().node("jx2table");
-			//StringObjectEncoder enc=new StringObjectEncoder();
 			int i,N=super.getColumnCount();
 			prefs.putInt(String.format("%s_N",_name),N);
-			//enc.outInt(N);
 			for(i=0;i<N;i++) {
 				SortOrder o=super.getSortOrder(i);
 				TableColumn col=super.getColumn(i);
 				prefs.putInt(String.format("%s_col_width[%d]",_name,i), col.getWidth());
-				//enc.outInt(col.getWidth());
 				Integer order=0;
 				if (SortOrder.ASCENDING==o) { order=1; }
 				else if (SortOrder.DESCENDING==o) { order=2; }
-				//enc.outInt(order);
 				prefs.putInt(String.format("%s_col_sort[%d]",_name,i), order);
 				prefs.putInt(String.format("%s[%d].width",_name,i),col.getWidth());
 			}
-			//enc.close();
-			//prefs.put(_name+".sort",enc.toString());
 		}
 	}
 	
-	private void readColumnAttributes() {
+	private void readColumnAttributes(String prgName) {
 		if (_name!=null) {
 			Preferences prefs=Preferences.userRoot().node("jx2table");
 			int N=prefs.getInt(String.format("%s_N",_name), -1);
@@ -207,9 +208,7 @@ public class JX2Table extends JXTable {
 					if (N == super.getColumnCount()) {
 						for (i = 0; i < N; i++) {
 							int width = prefs.getInt(String.format("%s_col_width[%d]",_name,i), -1);
-							//int width = dec.inInt();
 							if (width>-1) {
-								//Integer order = dec.inInt();
 								int order=prefs.getInt(String.format("%s_col_sort[%d]",_name,i), 0);
 								SortOrder o;
 								if (order == 0) {
@@ -219,7 +218,6 @@ public class JX2Table extends JXTable {
 								} else {
 									o = SortOrder.DESCENDING;
 								}
-								// super.setSortable(true);
 	
 								TableColumn col = super.getColumn(i);
 								col.setPreferredWidth(width);
@@ -228,8 +226,6 @@ public class JX2Table extends JXTable {
 									scol = o;
 								}
 							}
-							// super.toggleSortOrder(i);
-							// super.setSortOrder(i, o);//col.setWidth(width);
 						}
 					}
 					if (icol >= 0) {
@@ -252,15 +248,20 @@ public class JX2Table extends JXTable {
 	}
 	
 	public void persistPrefs() {
-		storeColumnAttributes();
+		storeColumnAttributes(_prgName);
 	}
 	
 	public void readPrefs() {
 		if (!_prefsRead) {
-			readColumnAttributes();
+			readColumnAttributes(_prgName);
 			_prefsRead=true;
 		}
-		//super.toggleSortOrder(0);
+	}
+	
+	public void storeIfRequested() {
+		if (_persistentRequested) {
+			persistPrefs();
+		}
 	}
 	
 	/**
@@ -301,43 +302,51 @@ public class JX2Table extends JXTable {
 		}
 	}
 	
-	
-	public JX2Table() {
-		_name=null;
-		init();
-	}
-	
-	public JX2Table(AbstractTableModel m) {
-		super(m);
-		_name=null;
-		init();
-	}
-	
-	public JX2Table(String name) {
-		_name=name;
-		init();
-	}
-	
-	public JX2Table(String name,AbstractTableModel m) {
-		super(m);
-		_name=name;
-		init();
-	}
-	
-	@SuppressWarnings("unchecked")
-	public JX2Table(String name,Vector data,Vector headers) {
-		super(data,headers);
-		_name=name;
-		init();
-	}
-	
 	private void addKey(KeyStroke k ,AbstractAction a) {
 		InputMap im = this.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 	    im.put(k, k);
 	    getActionMap().put(im.get(k), a);
 	}
 	
+	public void requestPersistent(boolean yes) {
+		_persistentRequested = yes;
+	}
+	
+	public JX2Table(String prgName) {
+		_name=null;
+		init();
+	}
+	
+	public JX2Table(String prgName, AbstractTableModel m) {
+		super(m);
+		_name=null;
+		_prgName = prgName;
+		init();
+	}
+	
+	public JX2Table(String prgName, String name) {
+		_name=name;
+		_prgName = prgName;
+		init();
+	}
+	
+	public JX2Table(String prgName, String name,AbstractTableModel m) {
+		super(m);
+		_name=name;
+		_prgName = prgName;
+		init();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public JX2Table(String prgName, String name,Vector data,Vector headers) {
+		super(data,headers);
+		_name=name;
+		_prgName = prgName;
+		init();
+	}
+	
 	public void init() {
+		_persistentRequested = false;
 		this.addMouseListener(new MouseAdapt(this));
 		
 		//super.setShowGrid(true);  --> Not reliable with Nimbus
@@ -349,6 +358,27 @@ public class JX2Table extends JXTable {
 		JTableHeader h=super.getTableHeader();
 		h.addMouseListener(new zc3MouseAdaptForHeader(this));
 		h.addMouseMotionListener(new zc3MouseAdaptForHeader(this));
+		h.getColumnModel().addColumnModelListener(new TableColumnModelListener() {
+			public void columnAdded(TableColumnModelEvent e) {
+				storeIfRequested();
+			}
+
+			public void columnRemoved(TableColumnModelEvent e) {
+				storeIfRequested();
+			}
+
+			public void columnMoved(TableColumnModelEvent e) {
+				storeIfRequested();
+			}
+
+			public void columnMarginChanged(ChangeEvent e) {
+				storeIfRequested();
+			}
+
+			public void columnSelectionChanged(ListSelectionEvent e) {
+				storeIfRequested();
+			}
+		});
 		
 		super.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	

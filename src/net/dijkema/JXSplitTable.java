@@ -44,12 +44,14 @@ import org.jdesktop.swingx.table.TableColumnExt;
 
 class MyJzc3Table extends JX2Table {
 	
+	private static final long serialVersionUID = 1L;
+
 	public String getTTT(MouseEvent e) {
 		return super.getToolTipText(e);
 	}
 	
-	public MyJzc3Table(String id,AbstractTableModel m) {
-		super(id,m);
+	public MyJzc3Table(String prgName, String id,AbstractTableModel m) {
+		super(prgName, id, m);
 	}
 	
 }
@@ -269,16 +271,16 @@ public class JXSplitTable extends JPanel {
 	
 	
 	@SuppressWarnings("serial")
-	public JXSplitTable(String name,AbstractSplitTableModel model,int verticalScrollPolicy,int horizontalScrollPolicy) {//,int minimumWidth) {
+	public JXSplitTable(String prgName, String name,AbstractSplitTableModel model,int verticalScrollPolicy,int horizontalScrollPolicy) {//,int minimumWidth) {
 		_listeners=new HashSet<SelectionListener>();
 		
-		_tleft=new MyJzc3Table(name+".left",model.modelLeft()) {
+		_tleft=new MyJzc3Table(prgName, name+".left",model.modelLeft()) {
 			public String getToolTipText(MouseEvent e) {
 				return JXSplitTable.this.getToolTipText(true,e);
 			}
 		};
 		
-		_tright=new MyJzc3Table(name+".right",model.modelRight()) {
+		_tright=new MyJzc3Table(prgName, name+".right",model.modelRight()) {
 			public String getToolTipText(MouseEvent e) {
 				return JXSplitTable.this.getToolTipText(false,e);
 			}

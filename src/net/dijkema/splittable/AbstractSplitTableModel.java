@@ -39,7 +39,11 @@ abstract public class AbstractSplitTableModel extends AbstractTableModel {
 	
 	//static Logger logger=zc3Logger.getLogger(AbstractSplitTableModel.class);
 
+	private static final long serialVersionUID = 1L;
+
 	class SplitModel extends AbstractTableModel {
+		
+		private static final long serialVersionUID = 1L;
 		
 		private boolean 					_left;
 		private AbstractSplitTableModel 	_model;
@@ -260,9 +264,4 @@ abstract public class AbstractSplitTableModel extends AbstractTableModel {
 	public TableModelListener[] getTableModelListeners() {
 		return _right.getTableModelListeners();
 	}
-
-	
-
-
-	
 }

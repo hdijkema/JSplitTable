@@ -29,6 +29,9 @@ package net.dijkema.splittable;
  */
 public abstract class AbstractTwoLevelSplitTableModel extends AbstractSplitTableModel {
 
+	private static final long serialVersionUID = 1L;
+
+
 	public class NoValue {
 		private String _msg;
 		
