@@ -180,7 +180,7 @@ public class JX2Table extends JXTable {
 	
 	private void storeColumnAttributes(String prgName) {
 		if (_name!=null) {
-			Preferences prefs=Preferences.userRoot().node("jx2table");
+			Preferences prefs=Preferences.userRoot().node((prgName == null) ? "jx2table" : prgName);
 			int i,N=super.getColumnCount();
 			prefs.putInt(String.format("%s_N",_name),N);
 			for(i=0;i<N;i++) {
@@ -198,7 +198,7 @@ public class JX2Table extends JXTable {
 	
 	private void readColumnAttributes(String prgName) {
 		if (_name!=null) {
-			Preferences prefs=Preferences.userRoot().node("jx2table");
+			Preferences prefs=Preferences.userRoot().node((prgName == null) ? "jx2table" : prgName);
 			int N=prefs.getInt(String.format("%s_N",_name), -1);
 			if (N!=-1) {
 				try {
@@ -330,7 +330,7 @@ public class JX2Table extends JXTable {
 		init();
 	}
 	
-	public JX2Table(String prgName, String name,AbstractTableModel m) {
+	public JX2Table(String prgName, String name, AbstractTableModel m) {
 		super(m);
 		_name=name;
 		_prgName = prgName;
