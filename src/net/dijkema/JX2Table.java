@@ -127,8 +127,8 @@ public class JX2Table extends JXTable {
 	private boolean _selectTextOnFocus=false;
 	
 	public interface SelectionListener {
-		public void selected(int row);
-		public void choosen(int row);
+		public void selected(int rowInModel);
+		public void choosen(int rowInModel);
 		public void noSelection();
 	}
 	
