@@ -28,8 +28,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import javax.swing.Action;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
@@ -270,6 +272,21 @@ public class JXSplitTable extends JPanel {
 		else
 			_tright.removeHighlighter(h);
 	} 
+	
+	
+	private int _action_counter = 0; 
+	
+	public synchronized void addKeyCatch(KeyStroke ks, Action a) {
+		_action_counter += 1;
+		String id = String.format("action-%04d", _action_counter);
+		_tleft.getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(ks, id);
+		_tleft.getActionMap().put(id, a);
+		
+		_action_counter += 1;
+		id = String.format("action-%04d", _action_counter);
+		_tright.getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(ks, id);
+		_tright.getActionMap().put(id, a);
+	}
 	
 	public JXSplitTable(String prgName, String name,AbstractSplitTableModel model,int verticalScrollPolicy,int horizontalScrollPolicy) {//,int minimumWidth) {
 		_listeners=new HashSet<SelectionListener>();
