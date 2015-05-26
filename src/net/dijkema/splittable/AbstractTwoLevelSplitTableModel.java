@@ -44,11 +44,22 @@ public abstract class AbstractTwoLevelSplitTableModel extends AbstractSplitTable
 		}
 	}
 	
-	/** For internal use */
 	public class CNodeIndex {
 		public int nodeIndex;
 		public int nodeRow;
 		public int column;
+		
+		public int getNodeIndex() {
+			return nodeIndex;
+		}
+		
+		public int getNodeRow() {
+			return nodeRow;
+		}
+		
+		public int getColumn() {
+			return column;
+		}
 
 		public String toString() {
 			return "nodeIndex="+nodeIndex+", nodeRow="+nodeRow+", column="+column;
@@ -60,6 +71,10 @@ public abstract class AbstractTwoLevelSplitTableModel extends AbstractSplitTable
 		
 		public boolean isValid() {
 			return nodeIndex>=0 && column>=0;
+		}
+		
+		public boolean isValidValue() {
+			return nodeIndex >= 0 && nodeRow >= 0 && column >= 0;
 		}
 		
 		public CNodeIndex(int ni,int nr,int c) {
