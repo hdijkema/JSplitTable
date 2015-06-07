@@ -21,6 +21,7 @@
 
 package net.dijkema;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -168,6 +169,11 @@ public class JXSplitTable extends JPanel {
 	public void setShowGrid(boolean g) {
 		_tleft.setShowGrid(g);
 		_tright.setShowGrid(g);
+	}
+	
+	public void setGridColor(Color c) {
+		_tleft.setGridColor(c);
+		_tright.setGridColor(c);
 	}
 	
 	public void setIntercellSpacing(Dimension d) {

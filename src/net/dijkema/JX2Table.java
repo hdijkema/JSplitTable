@@ -21,6 +21,7 @@
 
 package net.dijkema;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -349,9 +350,10 @@ public class JX2Table extends JXTable {
 		_persistentRequested = false;
 		this.addMouseListener(new MouseAdapt(this));
 		
-		//super.setShowGrid(true);  --> Not reliable with Nimbus
-		super.setShowGrid(false); // override default mode of any LAF 
-		this.addHighlighter(new BorderHighlighter(null,SplitTableDefaults.innerCellBorder(),false));
+		super.setShowGrid(true);  //--> Not reliable with Nimbus
+		super.setGridColor(new Color(160,160,160));;
+		//super.setShowGrid(false); // override default mode of any LAF 
+		//this.addHighlighter(new BorderHighlighter(null,SplitTableDefaults.innerCellBorder(),false));
 		
 		super.setSortOrderCycle(SortOrder.ASCENDING,SortOrder.DESCENDING,SortOrder.UNSORTED);
 		

@@ -205,8 +205,9 @@ public class JXTwoLevelSplitTable extends JXSplitTable {
 	public JXTwoLevelSplitTable(String prgName, String name, AbstractTwoLevelSplitTableModel model, int verticalScrollPolicy, int horizontalScrollPolicy) {
 		super(prgName, name, model, verticalScrollPolicy, horizontalScrollPolicy);
 		
-		super.setShowGrid(false);
-		super.setIntercellSpacing(new Dimension(0,1));
+		super.setShowGrid(true);
+		super.setGridColor(new Color(160,160,160));
+		//super.setIntercellSpacing(new Dimension(0,1));
 		super.setSortable(false);
 		
 		_model=model;
@@ -321,8 +322,8 @@ public class JXTwoLevelSplitTable extends JXSplitTable {
 		super.addHighlighter(new IconHighlighter(paintIconNone,new ExpandIcon(ExpandIcon.NONE)),true);
 		super.addHighlighter(new ColorHighlighter(splitRow,SplitTableDefaults.tablePartOfBg(),Color.black),true);
 		super.addHighlighter(new ColorHighlighter(splitRow,SplitTableDefaults.tablePartOfBg(),Color.black),false);
-		super.addHighlighter(new BorderHighlighter(top,SplitTableDefaults.topCellBorder()), true);
-		super.addHighlighter(new BorderHighlighter(left,SplitTableDefaults.leftCellBorder()), false);
+		//super.addHighlighter(new BorderHighlighter(top,SplitTableDefaults.topCellBorder()), true);
+		//super.addHighlighter(new BorderHighlighter(left,SplitTableDefaults.leftCellBorder()), false);
 		
 		
 		super.addSelectionListener(new JXSplitTable.SelectionListener() {
