@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.Vector;
 
 import javax.swing.JLabel;
 import javax.swing.event.TableModelEvent;
@@ -47,46 +48,98 @@ abstract public class AbstractSplitTableModel extends AbstractTableModel {
 	
 	class SplitModel extends AbstractTableModel {
 		
+		private int _col_count = -1;
+		private int _row_count = -1;
+		private Vector<String> _col_names = new Vector<String>();
+		private Vector<Class<?>> _col_classes = new Vector<Class<?>>();
+		private boolean _init = true;
+		
 		private static final long serialVersionUID = 1L;
 		
 		private boolean 					_left;
 		private AbstractSplitTableModel 	_model;
 		
 		public SplitModel(AbstractSplitTableModel m,boolean left) {
-			_left=left;
-			_model=m;
+			_left = left;
+			_model = m;
+			_init = true;
 		}
 
-		public int getColumnCount() {
-			if (_left) {
-				return _model.getSplitColumn();
-			} else {
-				return _model.getColumnCount()-_model.getSplitColumn();
+		private void init() {
+			_init = false;
+			
+			if (_model == null) {
+				_col_count = 0;
+				_row_count = 0;
+				_col_names.clear();
+				_col_classes.clear();
+				return;
 			}
+			
+			// column count
+			if (_left) {
+				_col_count = _model.getSplitColumn();
+			} else {
+				_col_count = _model.getColumnCount() - _model.getSplitColumn();
+			}
+			
+			// row count
+			_row_count = _model.getRowCount();
+			
+			// Column names
+			{
+				_col_names.clear();
+				int col, N;
+				for(col = 0, N = _col_count; col < N; col++) {
+					String name;
+					if (_left) {
+						name = _model.getColumnName(col);
+					} else {
+						name = _model.getColumnName(_model.getSplitColumn() + col);
+					}
+					_col_names.add(name);
+				}
+			}
+			
+			// Column classes
+			{
+				_col_classes.clear();
+				int col, N;
+				for(col = 0, N = _col_count; col < N; col++) {
+					Class<?> c = _model.getColumnClass(col);
+					_col_classes.add(c);
+				}
+			}
+			
+		}
+		
+		
+		public int getColumnCount() {
+			if (_init) init();
+			return _col_count;
 		}
 
 		public int getRowCount() {
-			return _model.getRowCount();
+			if (_init) init();
+			return _row_count;
 		}
 
 		public Object getValueAt(int row, int col) {
 			if (_left) {
 				return _model.getValueAt(row,col);
 			} else {
-				return _model.getValueAt(row, _model.getSplitColumn()+col);
+				return _model.getValueAt(row, _model.getSplitColumn() + col);
 			}
 		}
 		
 		public String getColumnName(int col) {
-			if (_left) {
-				return _model.getColumnName(col);
-			} else {
-				return _model.getColumnName(_model.getSplitColumn()+col);
-			}
+			if (_init) init();
+			return _col_names.get(col);
 		}
 		
 		public Class<?> getColumnClass(int columnIndex) {
-			return _model.getColumnClass(columnIndex);
+			if (_init) init();
+			return _col_classes.get(columnIndex);
 		}
 		
 		public boolean isCellEditable(int row,int col) {
@@ -105,12 +158,22 @@ abstract public class AbstractSplitTableModel extends AbstractTableModel {
 			}
 		}
 		
+		public void fireTableDataChanged() {
+			_init = true;
+			super.fireTableDataChanged();
+		}
+		
+		public void fireTableStructureChanged() {
+			_init = true;
+			super.fireTableStructureChanged();
+		}
+		
 	}
 	
 	
 	public AbstractSplitTableModel() {
-		_left=new SplitModel(this,true);
-		_right=new SplitModel(this,false);	
+		_left = new SplitModel(this,true);
+		_right = new SplitModel(this,false);	
 	}
 	
 	private AbstractTableModel _left;

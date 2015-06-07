@@ -193,6 +193,7 @@ public class JXTwoLevelSplitTable extends JXSplitTable {
 	}
 
 	
+	
 	/**
 	 * Constructs the JXTowLevelSplitTable with given name, model and scrollbar policies. 
 	 * 
@@ -213,36 +214,30 @@ public class JXTwoLevelSplitTable extends JXSplitTable {
 		
 		HighlightPredicate paintIconExpanded=new HighlightPredicate() {
 			public boolean isHighlighted(Component renderer, ComponentAdapter adapter) {
-				boolean b;
 				if (adapter.column==0) {
 					CNodeIndex cnode=_model.getCNodeIndex(adapter.row, 0);
 					if (cnode.nodeRow==-1) {
-						b = _model.getNodeExpanded(cnode.nodeIndex);
+						return _model.getNodeExpanded(cnode.nodeIndex);
 					} else {
-						b = false;
+						return false;
 					}
-					//System.out.println("expanded: cnode = "+cnode+", b = "+b);
 				} else {
-					b = false;
+					return false;
 				}
-				return b;
 			}
 		};
 		HighlightPredicate paintIconClosed=new HighlightPredicate() {
 			public boolean isHighlighted(Component renderer, ComponentAdapter adapter) {
-				boolean b;
 				if (adapter.column==0) {
 					CNodeIndex cnode=_model.getCNodeIndex(adapter.row, 0);
 					if (cnode.nodeRow==-1) {
-						b = !_model.getNodeExpanded(cnode.nodeIndex);
+						return !_model.getNodeExpanded(cnode.nodeIndex);
 					} else {
-						b = false;
+						return false;
 					}
-					//System.out.println("closed: cnode = "+cnode+", b = "+b);
 				} else {
-					b = false;
+					return false;
 				}
-				return b;
 			}
 		};
 		
@@ -263,20 +258,30 @@ public class JXTwoLevelSplitTable extends JXSplitTable {
 		
 		
 		HighlightPredicate splitRow=new HighlightPredicate() {
+			private int 		_row = -1;
+			private boolean 	_prev = false;
 			public boolean isHighlighted(Component renderer, ComponentAdapter adapter) {
-				CNodeIndex cnode=_model.getCNodeIndex(adapter.row, adapter.column);
-				if (cnode.nodeRow==-1) {
-					return true;
-				} else {
-					return false;
+				if (adapter.row == _row) { return _prev; }
+				else {
+					_row = adapter.row;
+					CNodeIndex cnode=_model.getCNodeIndex(adapter.row, adapter.column);
+					if (cnode.nodeRow==-1) {
+						_prev = true;
+						return true;
+					} else {
+						_prev = false;
+						return false;
+					}
 				}
 			}
 		};
+		
 		HighlightPredicate top=new HighlightPredicate() {
 			public boolean isHighlighted(Component renderer, ComponentAdapter adapter) {
 				return (adapter.row==0);
 			}
 		};
+		
 		HighlightPredicate left=new HighlightPredicate() {
 			public boolean isHighlighted(Component rederer, ComponentAdapter adapter) {
 				return (adapter.column==0);

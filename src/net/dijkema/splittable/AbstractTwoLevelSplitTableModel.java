@@ -21,6 +21,8 @@
 
 package net.dijkema.splittable;
 
+import java.util.Hashtable;
+
 /**
  * This model must implement a two level model consisting of nodes with rows per node.
  * 
@@ -81,6 +83,10 @@ public abstract class AbstractTwoLevelSplitTableModel extends AbstractSplitTable
 			nodeIndex=ni;
 			nodeRow=nr;
 			column=c;
+		}
+
+		public void setColumn(int col) {
+			column = col;
 		}
 	}
 	
@@ -143,7 +149,7 @@ public abstract class AbstractTwoLevelSplitTableModel extends AbstractSplitTable
 	 * @param nodeIndex
 	 * @return
 	 */
-	public abstract boolean    	getNodeExpanded(int nodeIndex);
+	public abstract boolean  getNodeExpanded(int nodeIndex);
 	
 	
 	/**
@@ -154,13 +160,13 @@ public abstract class AbstractTwoLevelSplitTableModel extends AbstractSplitTable
 	 * @param nodeIndex
 	 * @return
 	 */
-	public abstract boolean     setNodeExpanded(int nodeIndex,boolean true_is_yes);
+	public abstract boolean  setNodeExpanded(int nodeIndex,boolean true_is_yes);
 	
 	
 	/**
 	 * Must return the value of the nodeRow contained in the node with nodeIndex at nodeColumn. 
 	 */
-	public abstract Object      getValueAt(int nodeIndex,int nodeRow,int nodeColumn);
+	public abstract Object  getValueAt(int nodeIndex,int nodeRow,int nodeColumn);
 	
 	/**
 	 * Has a default implementation of returning false. Override, if you want nodes
@@ -231,7 +237,13 @@ public abstract class AbstractTwoLevelSplitTableModel extends AbstractSplitTable
 	
 	public void fireTableStructureChanged() {
 		_maxcolumns=-1;
+		_cnode_index_hash.clear();
 		super.fireTableStructureChanged();
+	}
+
+	public void fireTableDataChanged() {
+		_cnode_index_hash.clear();
+		super.fireTableDataChanged();
 	}
 	
 	final public int getRowCount() {
@@ -240,71 +252,89 @@ public abstract class AbstractTwoLevelSplitTableModel extends AbstractSplitTable
 		for(i=0;i<this.getNodeRowCount();i++) {
 			N+=1;
 			if (this.getNodeExpanded(i)) {
-				N+=this.getNodeRowCount(i);
+				N += this.getNodeRowCount(i);
 			}
 		}
 		return N;
 	}
 	
-	private CNodeIndex _cnode_index=new CNodeIndex(-3,-3,-3);
+	private Hashtable<Integer, CNodeIndex> _cnode_index_hash = new Hashtable<Integer, CNodeIndex>();
+	private CNodeIndex _two_index = new CNodeIndex(-2, -2, -2);
+	private CNodeIndex _three_index=new CNodeIndex(-3, -3, -3);
+
+	private void putCNodeIndex(int row, int col, CNodeIndex i) {
+		_cnode_index_hash.put(row, i);
+	}
 	
-	final public CNodeIndex getCNodeIndex(int row,int col) {
-		int nodeIndex=0;
-		int origRow=row;
-		boolean goOn=true;
-		while (goOn) {
-			
-			if (row==0) {
-				// We zijn *op* een node beland.
-				_cnode_index.set(nodeIndex,-1,col);
-				return _cnode_index;
-				//return new CNodeIndex(nodeIndex,-1,col);
-			} 
-			
-			if (this.getNodeExpanded(nodeIndex)) {
-				int rrow=row-1;
-				int r=this.getNodeRowCount(nodeIndex);
-				if (rrow<r) {
-					// We zijn *in* een node beland
-					_cnode_index.set(nodeIndex,rrow,col);
-					return _cnode_index;
-					//return new CNodeIndex(nodeIndex,rrow,col);
-				} else {
-					// We moeten deze node met inhoud tellen
-					row-=this.getNodeRowCount(nodeIndex);
-					nodeIndex+=1;
-					row-=1;
-				}
-			} else {
-				// we moeten deze node tellen, maar zonder inhoud
-				row-=1;
-				nodeIndex+=1;
-			}
-			
-			// Stop criterium, maar dan is er ook iets mis!
-			
-			if (row<0) {
-				goOn=false;
-				try {
-					throw new AbstractTwoLevelSplitModelException("Row count drops below 0 while calculating nodeIndex/nodeRow position");
-				} catch (Exception E) {
-					//logger.error(E);
-					E.printStackTrace();
-				}
-				_cnode_index.set(-1,-1,-1);
-				return _cnode_index;
-			}
-		}
+	final public CNodeIndex getCNodeIndex(int row, int col) {
+		CNodeIndex ind = _cnode_index_hash.get(row);
 		
-		_cnode_index.set(-2,-2,-2);
-		return _cnode_index;
+		if (ind != null) {
+			ind.setColumn(col);
+			return ind; 
+		} else {
+			int orig_row = row;
+			int orig_col = col;
+			int nodeIndex=0;
+			int origRow=row;
+			boolean goOn=true;
+			CNodeIndex _cnode_index = new CNodeIndex(-3, -3 , -3);
+			while (goOn) {
+				
+				if (row==0) {
+					// We zijn *op* een node beland.
+					_cnode_index.set(nodeIndex, -1, col);
+					putCNodeIndex(orig_row, orig_col, _cnode_index);
+					return _cnode_index;
+				} 
+				
+				if (this.getNodeExpanded(nodeIndex)) {
+					int rrow = row - 1;
+					int r = this.getNodeRowCount(nodeIndex);
+					if (rrow<r) {
+						// We zijn *in* een node beland
+						_cnode_index.set(nodeIndex,rrow,col);
+						putCNodeIndex(orig_row, orig_col, _cnode_index);
+						return _cnode_index;
+					} else {
+						// We moeten deze node met inhoud tellen
+						row -= this.getNodeRowCount(nodeIndex);
+						nodeIndex += 1;
+						row -= 1;
+					}
+				} else {
+					// we moeten deze node tellen, maar zonder inhoud
+					row-=1;
+					nodeIndex+=1;
+				}
+				
+				// Stop criterium, maar dan is er ook iets mis!
+				
+				if (row<0) {
+					goOn=false;
+					try {
+						throw new AbstractTwoLevelSplitModelException("Row count drops below 0 while calculating nodeIndex/nodeRow position");
+					} catch (Exception E) {
+						//logger.error(E);
+						E.printStackTrace();
+					}
+					_cnode_index.set(-1,-1,-1);
+					return _cnode_index;
+				}
+			}
+			
+			_cnode_index.set(-2,-2,-2);
+			putCNodeIndex(orig_row, orig_col, _cnode_index);
+			return _cnode_index;
+		}
 	}
 	
 	private String _blowZero=new String("RowBelowZero");
 	private String _unreach=new String("Unreachable");
 	
 	final public boolean isNodeIndex(int row) {
-		CNodeIndex cnode=getCNodeIndex(row,0);
+		CNodeIndex cnode=getCNodeIndex(row, 0);
+		
 		if (cnode.nodeIndex<0) {
 			return false;
 		} else if (cnode.nodeRow==-1) {
@@ -320,8 +350,7 @@ public abstract class AbstractTwoLevelSplitTableModel extends AbstractSplitTable
 	}
 	
 	final public Object getValueAt(int row,int col) {
-		
-		CNodeIndex cnode=getCNodeIndex(row,col);
+		CNodeIndex cnode = getCNodeIndex(row, col);
 		
 		if (cnode.nodeIndex==-1) {
 			return _blowZero;
@@ -334,16 +363,15 @@ public abstract class AbstractTwoLevelSplitTableModel extends AbstractSplitTable
 				return this.getNodeValue(cnode.nodeIndex, cnode.column);
 			}
 		} else { 
-			if (col>=this.getNodeColumnCount(cnode.nodeIndex)) {
+			if (col >= this.getNodeColumnCount(cnode.nodeIndex)) {
 				return noval;
 			} else {
-				return this.getValueAt(cnode.nodeIndex, cnode.nodeRow,cnode.column);
+				return this.getValueAt(cnode.nodeIndex, cnode.nodeRow, cnode.column);
 			}
 		}
 	}
 
 	final public void setValueAt(Object val,int row,int col) {
-		
 		CNodeIndex cnode=getCNodeIndex(row,col);
 		
 		if (cnode.nodeIndex==-1) {
