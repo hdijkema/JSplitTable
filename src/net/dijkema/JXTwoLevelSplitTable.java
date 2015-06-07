@@ -213,13 +213,21 @@ public class JXTwoLevelSplitTable extends JXSplitTable {
 		_listeners=new HashSet<SelectionListener>();
 		
 		HighlightPredicate paintIconExpanded=new HighlightPredicate() {
+			private int 	_row = -1;
+			private boolean _prev = false;
 			public boolean isHighlighted(Component renderer, ComponentAdapter adapter) {
 				if (adapter.column==0) {
-					CNodeIndex cnode=_model.getCNodeIndex(adapter.row, 0);
-					if (cnode.nodeRow==-1) {
-						return _model.getNodeExpanded(cnode.nodeIndex);
+					if (_row == adapter.row) {
+						return _prev;
 					} else {
-						return false;
+						CNodeIndex cnode=_model.getCNodeIndex(adapter.row, 0);
+						if (cnode.nodeRow==-1) {
+							_prev = _model.getNodeExpanded(cnode.nodeIndex);
+							return _prev;
+						} else {
+							_prev = false;
+							return false;
+						}
 					}
 				} else {
 					return false;
@@ -227,13 +235,22 @@ public class JXTwoLevelSplitTable extends JXSplitTable {
 			}
 		};
 		HighlightPredicate paintIconClosed=new HighlightPredicate() {
+			private int 	_row = -1;
+			private boolean _prev = false;
 			public boolean isHighlighted(Component renderer, ComponentAdapter adapter) {
 				if (adapter.column==0) {
-					CNodeIndex cnode=_model.getCNodeIndex(adapter.row, 0);
-					if (cnode.nodeRow==-1) {
-						return !_model.getNodeExpanded(cnode.nodeIndex);
+					if (_row == adapter.row) {
+						return _prev;
 					} else {
-						return false;
+						_row = adapter.row;
+						CNodeIndex cnode=_model.getCNodeIndex(adapter.row, 0);
+						if (cnode.nodeRow==-1) {
+							_prev = !_model.getNodeExpanded(cnode.nodeIndex);
+							return _prev;
+						} else {
+							_prev = false;
+							return false;
+						}
 					}
 				} else {
 					return false;
@@ -242,13 +259,22 @@ public class JXTwoLevelSplitTable extends JXSplitTable {
 		};
 		
 		HighlightPredicate paintIconNone=new HighlightPredicate() {
+			private int 	_row = -1;
+			private boolean _prev = false;
 			public boolean isHighlighted(Component renderer, ComponentAdapter adapter) {
 				if (adapter.column==0) {
-					CNodeIndex cnode=_model.getCNodeIndex(adapter.row, 0);
-					if (cnode.nodeRow==-1) {
-						return false;
+					if (_row == adapter.row) {
+						return _prev;
 					} else {
-						return true;
+						_row = adapter.row;
+						CNodeIndex cnode=_model.getCNodeIndex(adapter.row, 0);
+						if (cnode.nodeRow==-1) {
+							_prev = false;
+							return false;
+						} else {
+							_prev = true;
+							return true;
+						}
 					}
 				} else {
 					return true;
@@ -261,8 +287,9 @@ public class JXTwoLevelSplitTable extends JXSplitTable {
 			private int 		_row = -1;
 			private boolean 	_prev = false;
 			public boolean isHighlighted(Component renderer, ComponentAdapter adapter) {
-				if (adapter.row == _row) { return _prev; }
-				else {
+				if (adapter.row == _row) { 
+					return _prev; 
+				} else {
 					_row = adapter.row;
 					CNodeIndex cnode=_model.getCNodeIndex(adapter.row, adapter.column);
 					if (cnode.nodeRow==-1) {
